@@ -1,4 +1,5 @@
-name: 🔁 Duplicate Issue Detector
+
+name: Duplicate Issue Detector
 
 on:
   issues:
@@ -52,7 +53,7 @@ jobs:
                   `- If this is the same problem, please continue the discussion there.`,
                   `- If different, kindly explain how this issue is unique.`,
                   ``,
-                  `Thanks for helping keep Placement-Prep organized! 🙌`,
+                  `Thanks for helping keep the project organized! 🙌`,
                   ``,
                   `---`,
                   `*Automated duplicate detection*`
