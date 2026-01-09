@@ -244,51 +244,6 @@ A structured <b>12-week roadmap</b> covering <b>DSA, System Design, and Intervie
 
 ## This project uses Supabase for authentication and database.
 
-## 🛠 Supabase Setup (for Contributors)
-### Step 1: Create Supabase Project
-1. Create an account at https://supabase.com
-2. Create a new project
-
-### Step 2: Get API Keys
-Navigate to the left sidebar and sclick Project Settings at the bottom →
-1. Data API -> Copy : Project URL
-2. API Keys -> Copy : Publishable key
-
-### Step 3: Environment Setup
-Create a `.env` file in the project root:
-
-VITE_SUPABASE_URL=your_project_url_here
-VITE_SUPABASE_ANON_KEY=your_publishable_key_here
-
-### Step 4: Initialize the Database (Schema)
-Since the project relies on specific tables and RLS policies, you need to run the provided migration script:
-
-1. In your Supabase Dashboard, go to the SQL Editor 
-2. Click on "+ New query".
-3. Open the file supabase/migrations/schema.sql from this project.
-4. Copy the entire content of that file and Paste it into the Supabase SQL Editor.
-5. Click Run.
-
-### Step 5: Disable Email Confirmation (For Easy Testing)
-By default, Supabase sends a verification email to new users. To skip this step while developing:
-
-1. Go to your Supabase Dashboard.
-2. Navigate to Authentication > Providers > User signups.
-3. Find the toggle "Confirm email" and turn it OFF.
-4. Save changes.
-
-
-## 🚀 Why this is required?
-Setting up your own Supabase instance ensures:
-
-End-to-End Testing: You can test Login/Signup flows without affecting production data.
-
-Data Isolation: You can add/delete dummy data in your own database while developing features.
-
-Security: Every contributor works in their own safe sandbox environment.
-
----
-
 ## 🤝 Contribution Guide
 
 We welcome contributions! 🚀 Here’s how you can help:
