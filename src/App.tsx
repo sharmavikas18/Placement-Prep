@@ -10,6 +10,7 @@ import Companies from "./pages/Companies";
 import ComingSoon from "./pages/ComingSoon";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop"
+import ResumeBuilder from "./pages/ResumeBuilder";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/tests" element={<ComingSoon />} />
             <Route path="/mentorship" element={<ComingSoon />} />
             <Route path="/settings" element={<ComingSoon />} />
+            <Route path="/resume-builder" element={<ResumeBuilder />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
