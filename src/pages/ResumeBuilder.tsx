@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 export default function ResumeBuilder() {
   const [form, setForm] = useState({
@@ -10,35 +12,57 @@ export default function ResumeBuilder() {
     projects: "",
   });
 
+  const resumeRef = useRef<HTMLDivElement>(null);
+
+  const handleChange = (e: any) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const downloadPDF = async () => {
+    if (!resumeRef.current) return;
+
+    const canvas = await html2canvas(resumeRef.current);
+    const imgData = canvas.toDataURL("image/png");
+
+    const pdf = new jsPDF("p", "mm", "a4");
+    const width = pdf.internal.pageSize.getWidth();
+    const height = (canvas.height * width) / canvas.width;
+
+    pdf.addImage(imgData, "PNG", 0, 0, width, height);
+    pdf.save("My_Resume.pdf");
+  };
+
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Resume Builder</h1>
+    <div className="p-6 max-w-6xl mx-auto grid md:grid-cols-2 gap-6">
+      
+      {/* FORM */}
+      <div>
+        <h1 className="text-2xl font-bold mb-4">Resume Builder</h1>
 
-      <div className="grid gap-3">
-        <input placeholder="Full Name" className="border p-2"
-          onChange={e => setForm({ ...form, name: e.target.value })} />
+        <div className="grid gap-3">
+          <input name="name" placeholder="Full Name" className="border p-2" onChange={handleChange} />
+          <input name="email" placeholder="Email" className="border p-2" onChange={handleChange} />
+          <input name="phone" placeholder="Phone" className="border p-2" onChange={handleChange} />
+          <textarea name="skills" placeholder="Skills" className="border p-2" onChange={handleChange} />
+          <textarea name="education" placeholder="Education" className="border p-2" onChange={handleChange} />
+          <textarea name="projects" placeholder="Projects" className="border p-2" onChange={handleChange} />
+        </div>
 
-        <input placeholder="Email" className="border p-2"
-          onChange={e => setForm({ ...form, email: e.target.value })} />
-
-        <input placeholder="Phone" className="border p-2"
-          onChange={e => setForm({ ...form, phone: e.target.value })} />
-
-        <textarea placeholder="Skills" className="border p-2"
-          onChange={e => setForm({ ...form, skills: e.target.value })} />
-
-        <textarea placeholder="Education" className="border p-2"
-          onChange={e => setForm({ ...form, education: e.target.value })} />
-
-        <textarea placeholder="Projects" className="border p-2"
-          onChange={e => setForm({ ...form, projects: e.target.value })} />
+        <button
+          onClick={downloadPDF}
+          className="mt-4 bg-black text-white px-4 py-2 rounded"
+        >
+          Download PDF
+        </button>
       </div>
 
-      <h2 className="text-xl font-semibold mt-6">Preview</h2>
-
-      <div className="border p-4 mt-2 bg-gray-50">
-        <h3 className="text-lg font-bold">{form.name}</h3>
+      {/* PREVIEW */}
+      <div ref={resumeRef} className="border p-6 bg-white">
+        <h2 className="text-xl font-bold">{form.name}</h2>
         <p>{form.email} | {form.phone}</p>
+
+        <hr className="my-2" />
+
         <p><b>Skills:</b> {form.skills}</p>
         <p><b>Education:</b> {form.education}</p>
         <p><b>Projects:</b> {form.projects}</p>
