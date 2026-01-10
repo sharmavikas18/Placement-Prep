@@ -30,11 +30,10 @@ const App = () => (
             <Route path="/system-design" element={<ComingSoon />} />
             <Route path="/progress" element={<ComingSoon />} />
             <Route path="/materials" element={<ComingSoon />} />
-            <Route path="/resume" element={<ComingSoon />} />
+            <Route path="/resume-builder" element={<ResumeBuilder />} />
             <Route path="/tests" element={<ComingSoon />} />
             <Route path="/mentorship" element={<ComingSoon />} />
             <Route path="/settings" element={<ComingSoon />} />
-            <Route path="/resume-builder" element={<ResumeBuilder />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
