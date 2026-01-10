@@ -5,8 +5,27 @@ import { ArrowLeft, Play, Send, BookOpen, Code2, CheckCircle, Clock, Star, Rotat
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+interface Example {
+  input: string;
+  output: string;
+  explanation?: string;
+}
+
+interface Problem {
+  id: number;
+  title: string;
+  difficulty: string;
+  topic: string;
+  solved: boolean;
+  starred: boolean;
+  description: string;
+  examples: Example[];
+  constraints: string[];
+  starterCode: string;
+}
+
 // Mock problem data - in a real app, this would come from an API
-const problemsData: Record<string, any> = {
+const problemsData: Record<string, Problem> = {
   "1": {
     id: 1,
     title: "Two Sum",
@@ -294,7 +313,7 @@ const ProblemDetail = () => {
                 <div>
                   <h3 className="text-lg font-semibold text-foreground mb-3">Examples</h3>
                   <div className="space-y-4">
-                    {problem.examples.map((example: any, index: number) => (
+                    {problem.examples.map((example: Example, index: number) => (
                       <div key={index} className="glass rounded-lg p-4 space-y-2">
                         <p className="font-medium text-foreground">Example {index + 1}:</p>
                         <div className="space-y-1">
