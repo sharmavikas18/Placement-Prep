@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, Filter, BookOpen, CheckCircle, Clock, Star } from "lucide-react";
 import Loader from "@/components/Loader";
@@ -30,6 +31,7 @@ const difficultyColors = {
 };
 
 const DSA = () => {
+  const navigate = useNavigate();
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -96,6 +98,7 @@ const DSA = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 + index * 0.05 }}
+              onClick={() => navigate(`/dsa/problem/${problem.id}`)}
               className="flex items-center gap-4 p-4 hover:bg-muted/30 transition-colors cursor-pointer"
             >
               <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">

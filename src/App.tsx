@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DashboardLayout from "./layouts/DashboardLayout";
 import Index from "./pages/Index";
 import DSA from "./pages/DSA";
+import ProblemDetail from "./pages/ProblemDetail";
 import Companies from "./pages/Companies";
 import ComingSoon from "./pages/ComingSoon";
 import NotFound from "./pages/NotFound";
@@ -23,6 +24,7 @@ const App = () => (
           <Route element={<DashboardLayout />}>
             <Route path="/" element={<Index />} />
             <Route path="/dsa" element={<DSA />} />
+            <Route path="/dsa/problem/:id" element={<ProblemDetail />} />
             <Route path="/companies" element={<Companies />} />
             <Route path="/aptitude" element={<ComingSoon />} />
             <Route path="/interview" element={<ComingSoon />} />
