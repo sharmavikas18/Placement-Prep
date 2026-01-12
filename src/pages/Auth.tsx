@@ -1,18 +1,31 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { 
   Zap, Lock, Mail, User, ArrowRight, Eye, EyeOff, 
-  ShieldCheck, ShieldAlert, Fingerprint, Chrome, Github,
-  Briefcase, CheckCircle2, Globe, Sparkles, Cpu, Scan
+  ShieldCheck, Globe, Cpu, Scan, Chrome, Github
 } from 'lucide-react';
+
+// --- FIREBASE IMPORTS ---
+import { auth, googleProvider, githubProvider } from './firebase'; 
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signInWithPopup,
+  updateProfile 
+} from 'firebase/auth';
 
 const Auth = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState('');
   
+  // --- NEW STATE FOR FIREBASE ---
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const getStrength = (pass: string) => {
     let s = 0;
     if (pass.length > 8) s++;
@@ -24,6 +37,33 @@ const Auth = () => {
 
   const strength = getStrength(password);
 
+  // --- FIREBASE HANDLERS ---
+  const handleAuth = async () => {
+    setLoading(true);
+    try {
+      if (isLogin) {
+        await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(userCredential.user, { displayName: name });
+      }
+      navigate('/dashboard');
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSocialLogin = async (provider: any) => {
+    try {
+      await signInWithPopup(auth, provider);
+      navigate('/dashboard');
+    } catch (error: any) {
+      console.error("Social Auth Failed", error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#020617] text-slate-200 font-sans flex items-center justify-center p-4 relative overflow-hidden">
       
@@ -32,8 +72,6 @@ const Auth = () => {
         <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-cyan-500/10 blur-[150px] rounded-full animate-pulse" />
         <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-indigo-600/10 blur-[150px] rounded-full animate-pulse" />
         <div className="absolute inset-0 bg-[url('https://res.cloudinary.com/dvhndv7be/image/upload/v1676239162/noise_f7s6e2.png')] opacity-[0.05]" />
-        
-        {/* Animated Grid Lines */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:40px_40px]" />
       </div>
 
@@ -42,10 +80,8 @@ const Auth = () => {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-[1100px] min-h-[700px] grid grid-cols-1 lg:grid-cols-2 bg-[#0b1121]/60 border border-white/10 rounded-[4rem] backdrop-blur-3xl overflow-hidden shadow-[0_0_150px_rgba(0,0,0,0.7)] relative z-20"
       >
-        {/* LEFT PANEL: DATA VISUALIZATION */}
+        {/* LEFT PANEL */}
         <div className="hidden lg:flex flex-col justify-between p-16 bg-gradient-to-br from-cyan-500/20 via-transparent to-transparent border-r border-white/5 relative overflow-hidden">
-          
-          {/* Logo & Status */}
           <div className="relative z-10 flex flex-col gap-10">
             <div className="flex items-center gap-4 group cursor-pointer" onClick={() => navigate('/')}>
               <div className="bg-cyan-400 p-2.5 rounded-2xl shadow-[0_0_25px_rgba(34,211,238,0.4)] transition-transform group-hover:scale-110">
@@ -64,7 +100,6 @@ const Auth = () => {
             </div>
           </div>
 
-          {/* Stats / Visual eye-candy */}
           <div className="relative z-10 grid grid-cols-2 gap-6">
              <div className="p-6 bg-white/5 border border-white/10 rounded-[2.5rem] backdrop-blur-md">
                 <Globe className="w-6 h-6 text-cyan-400 mb-3" />
@@ -77,12 +112,10 @@ const Auth = () => {
                 <div className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Placement Rate</div>
              </div>
           </div>
-
-          {/* Decorative background circle */}
           <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-cyan-500/10 rounded-full blur-[80px]" />
         </div>
 
-        {/* RIGHT PANEL: INTERACTIVE FORM */}
+        {/* RIGHT PANEL */}
         <div className="p-10 md:p-20 flex flex-col justify-center relative bg-black/20">
           <AnimatePresence mode="wait">
             <motion.div
@@ -105,12 +138,16 @@ const Auth = () => {
               </div>
 
               <div className="space-y-6">
-                {/* HIGH-END SOCIAL LOGINS */}
+                {/* UPDATED SOCIAL BUTTONS */}
                 <div className="flex gap-4">
-                   <button className="flex-1 flex items-center justify-center gap-3 bg-[#020617] border border-white/10 py-4 rounded-3xl hover:border-cyan-400/50 transition-all hover:bg-cyan-400/5 group">
+                   <button 
+                    onClick={() => handleSocialLogin(googleProvider)}
+                    className="flex-1 flex items-center justify-center gap-3 bg-[#020617] border border-white/10 py-4 rounded-3xl hover:border-cyan-400/50 transition-all hover:bg-cyan-400/5 group">
                       <Chrome className="w-5 h-5 text-slate-400 group-hover:text-cyan-400 transition-colors" />
                    </button>
-                   <button className="flex-1 flex items-center justify-center gap-3 bg-[#020617] border border-white/10 py-4 rounded-3xl hover:border-cyan-400/50 transition-all hover:bg-cyan-400/5 group">
+                   <button 
+                    onClick={() => handleSocialLogin(githubProvider)}
+                    className="flex-1 flex items-center justify-center gap-3 bg-[#020617] border border-white/10 py-4 rounded-3xl hover:border-cyan-400/50 transition-all hover:bg-cyan-400/5 group">
                       <Github className="w-5 h-5 text-slate-400 group-hover:text-cyan-400 transition-colors" />
                    </button>
                 </div>
@@ -120,7 +157,13 @@ const Auth = () => {
                     <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-3">Full Name</label>
                     <div className="relative group">
                       <User className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600 group-focus-within:text-cyan-400" />
-                      <input type="text" placeholder="Candidate Identifier" className="w-full bg-[#020617] border border-white/10 rounded-[1.5rem] py-5 pl-14 pr-4 outline-none focus:border-cyan-500/50 focus:bg-[#0b1121] transition-all text-xs font-bold" />
+                      <input 
+                        type="text" 
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Candidate Identifier" 
+                        className="w-full bg-[#020617] border border-white/10 rounded-[1.5rem] py-5 pl-14 pr-4 outline-none focus:border-cyan-500/50 focus:bg-[#0b1121] transition-all text-xs font-bold" 
+                      />
                     </div>
                   </div>
                 )}
@@ -129,7 +172,13 @@ const Auth = () => {
                   <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-3">Candidate Email</label>
                   <div className="relative group">
                     <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600 group-focus-within:text-cyan-400" />
-                    <input type="email" placeholder="user@careerarchive.com" className="w-full bg-[#020617] border border-white/10 rounded-[1.5rem] py-5 pl-14 pr-4 outline-none focus:border-cyan-500/50 focus:bg-[#0b1121] transition-all text-xs font-bold" />
+                    <input 
+                      type="email" 
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="user@careerarchive.com" 
+                      className="w-full bg-[#020617] border border-white/10 rounded-[1.5rem] py-5 pl-14 pr-4 outline-none focus:border-cyan-500/50 focus:bg-[#0b1121] transition-all text-xs font-bold" 
+                    />
                   </div>
                 </div>
 
@@ -168,17 +217,12 @@ const Auth = () => {
                 </div>
 
                 <button 
-                  onClick={() => navigate('/dashboard')}
-                  className="w-full bg-cyan-400 text-black py-5 rounded-[1.5rem] font-black text-sm uppercase tracking-[0.3em] hover:bg-cyan-300 hover:shadow-[0_0_40px_rgba(34,211,238,0.6)] transition-all flex items-center justify-center gap-4 mt-6 overflow-hidden relative group"
+                  onClick={handleAuth}
+                  disabled={loading}
+                  className="w-full bg-cyan-400 text-black py-5 rounded-[1.5rem] font-black text-sm uppercase tracking-[0.3em] hover:bg-cyan-300 hover:shadow-[0_0_40px_rgba(34,211,238,0.6)] transition-all flex items-center justify-center gap-4 mt-6 disabled:opacity-50 overflow-hidden relative group"
                 >
-                  <span className="relative z-10">{isLogin ? 'Access Archive' : 'Initiate Profile'}</span>
+                  <span className="relative z-10">{loading ? 'Processing...' : isLogin ? 'Access Archive' : 'Initiate Profile'}</span>
                   <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-2 transition-transform" />
-                  <motion.div 
-                    className="absolute inset-0 bg-white/20"
-                    initial={{ x: "-100%" }}
-                    whileHover={{ x: "100%" }}
-                    transition={{ duration: 0.5 }}
-                  />
                 </button>
 
                 <div className="text-center pt-10">
