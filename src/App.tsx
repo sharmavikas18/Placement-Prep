@@ -12,7 +12,9 @@ import ProblemDetail from "./pages/ProblemDetail";
 import Companies from "./pages/Companies";
 import StudyMaterial from "./pages/StudyMaterial"; 
 import ComingSoon from "./pages/ComingSoon";
+import Mentorship from "./pages/Mentorship";
 import NotFound from "./pages/NotFound";
+import Settings from "./pages/Settings";
 import ScrollToTop from "./components/ScrollToTop";
 import ResumeBuilder from "./pages/ResumeBuilder";   // ✅ NEW IMPORT
 
@@ -33,17 +35,19 @@ const App = () => (
             <Route path="/study-material" element={<StudyMaterial />} />
             <Route path="/dsa/problem/:id" element={<ProblemDetail />} />
             <Route path="/companies" element={<Companies />} />
+            <Route path="/mentorship" element={<Mentorship />} />
             <Route path="/aptitude" element={<ComingSoon />} />
             <Route path="/interview" element={<ComingSoon />} />
             <Route path="/system-design" element={<ComingSoon />} />
             <Route path="/progress" element={<ComingSoon />} />
+            <Route path="/settings" element={<Settings />} />
 
             {/* ✅ Resume Builder now functional */}
             <Route path="/resume" element={<ResumeBuilder />} />
 
             <Route path="/tests" element={<ComingSoon />} />
-            <Route path="/mentorship" element={<ComingSoon />} />
-            <Route path="/settings" element={<ComingSoon />} />
+            
+            
           </Route>
 
           <Route path="*" element={<NotFound />} />
