@@ -1,7 +1,10 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Filter, CheckCircle, Clock, Star, XCircle, BookOpen } from "lucide-react";
+import { 
+  Search, Filter, CheckCircle, Clock, Star, XCircle, 
+  BookOpen, Trophy, Target, Zap, ChevronRight, Briefcase 
+} from "lucide-react";
 import Loader from "@/components/Loader";
 
 // Static Data (Unchanged)
@@ -37,7 +40,6 @@ const DSA = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading] = useState(false);
 
-  // Memoized filter logic
   const filteredProblems = useMemo(() => {
     return problems.filter((problem) => {
       const matchesSearch = problem.title.toLowerCase().includes(searchTerm.toLowerCase());
@@ -47,7 +49,7 @@ const DSA = () => {
   }, [searchTerm, selectedTopic]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-10">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
@@ -105,13 +107,12 @@ const DSA = () => {
           </h3>
         </div>
         
-        {/* Problems List with Stabilized Layout */}
         <div className="flex flex-col">
           <AnimatePresence initial={false} mode="popLayout">
             {filteredProblems.map((problem) => (
               <motion.div
                 key={problem.id}
-                layout // Smooths the position change of surrounding items
+                layout
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -153,25 +154,89 @@ const DSA = () => {
             ))}
           </AnimatePresence>
 
-          {/* Empty State */}
-          <AnimatePresence>
-            {filteredProblems.length === 0 && (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center py-20 text-center"
+          {filteredProblems.length === 0 && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex flex-col items-center justify-center py-20 text-center"
+            >
+              <XCircle className="w-12 h-12 text-muted-foreground opacity-20 mb-4" />
+              <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs">No matching problems found</p>
+              <button 
+                onClick={() => {setSearchTerm(""); setSelectedTopic(null);}}
+                className="mt-4 text-[10px] font-black uppercase text-primary hover:underline"
               >
-                <XCircle className="w-12 h-12 text-muted-foreground opacity-20 mb-4" />
-                <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs">No matching problems found</p>
-                <button 
-                  onClick={() => {setSearchTerm(""); setSelectedTopic(null);}}
-                  className="mt-4 text-[10px] font-black uppercase text-primary hover:underline"
-                >
-                  Clear all filters
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                Clear all filters
+              </button>
+            </motion.div>
+          )}
+        </div>
+      </div>
+
+      {/* NEW SECTION: Stats & Preparation Insights */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Difficulty Breakdown */}
+        <div className="glass p-6 rounded-2xl border border-white/5">
+          <div className="flex items-center gap-2 mb-4">
+            <Target className="w-4 h-4 text-primary" />
+            <h3 className="text-xs font-black uppercase tracking-widest">Mastery Breakdown</h3>
+          </div>
+          <div className="space-y-4">
+            {[
+              { label: "Easy", solved: 45, total: 100, color: "bg-success" },
+              { label: "Medium", solved: 18, total: 150, color: "bg-warning" },
+              { label: "Hard", solved: 5, total: 50, color: "bg-destructive" },
+            ].map((stat) => (
+              <div key={stat.label}>
+                <div className="flex justify-between text-[10px] font-bold uppercase mb-1">
+                  <span>{stat.label}</span>
+                  <span className="text-muted-foreground">{stat.solved}/{stat.total}</span>
+                </div>
+                <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(stat.solved / stat.total) * 100}%` }}
+                    className={`h-full ${stat.color}`}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Quick Actions / Company Tags */}
+        <div className="glass p-6 rounded-2xl border border-white/5">
+          <div className="flex items-center gap-2 mb-4">
+            <Briefcase className="w-4 h-4 text-primary" />
+            <h3 className="text-xs font-black uppercase tracking-widest">Company Curated</h3>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            {["Amazon", "Google", "Meta", "Netflix"].map((company) => (
+              <button key={company} className="flex items-center justify-between p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 transition-all group">
+                <span className="text-[11px] font-bold">{company}</span>
+                <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all" />
+              </button>
+            ))}
+          </div>
+          <button className="w-full mt-4 py-2 rounded-xl bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-colors">
+            View All Companies
+          </button>
+        </div>
+
+        {/* Motivation Card */}
+        <div className="bg-primary/10 p-6 rounded-2xl border border-primary/20 flex flex-col justify-between relative overflow-hidden group">
+          <Zap className="absolute -right-4 -top-4 w-24 h-24 text-primary/10 rotate-12 group-hover:scale-110 transition-transform" />
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Trophy className="w-5 h-5 text-primary" />
+              <h3 className="text-sm font-black uppercase tracking-tighter">Current Streak</h3>
+            </div>
+            <p className="text-3xl font-black text-primary">12 Days</p>
+            <p className="text-[10px] text-muted-foreground mt-1 uppercase font-bold tracking-widest">You're in the top 5% this week!</p>
+          </div>
+          <button className="mt-4 flex items-center gap-2 text-[11px] font-black uppercase text-primary">
+            View Leaderboard <ChevronRight className="w-3 h-3" />
+          </button>
         </div>
       </div>
 
