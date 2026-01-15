@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Homepage from "./pages/Homepage";
 import Auth from "./pages/Auth";
 import DSA from "./pages/DSA";
+import MockTest from "./pages/MockTest";
 import ProblemDetail from "./pages/ProblemDetail";
 import Companies from "./pages/Companies";
 import StudyMaterial from "./pages/StudyMaterial"; 
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/dsa/problem/:id" element={<ProblemDetail />} />
             <Route path="/companies" element={<Companies />} />
             <Route path="/mentorship" element={<Mentorship />} />
+            <Route path="/mock-test" element={<MockTest />} />
             <Route path="/aptitude" element={<ComingSoon />} />
             <Route path="/interview" element={<ComingSoon />} />
             <Route path="/system-design" element={<ComingSoon />} />
