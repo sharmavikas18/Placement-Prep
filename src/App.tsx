@@ -8,13 +8,21 @@ import Index from "./pages/Index";
 import DSA from "./pages/DSA";
 
 import MockTest from "./pages/MockTest";
+import AptitudePage from "./pages/AptitudePage";
 import ProblemDetail from "./pages/ProblemDetail";
 
 import Companies from "./pages/Companies";
 import ComingSoon from "./pages/ComingSoon";
 import NotFound from "./pages/NotFound";
 
+import Settings from "./pages/Settings";
+import ScrollToTop from "./components/ScrollToTop";
+import ResumeBuilder from "./pages/ResumeBuilder";   // ✅ NEW IMPORT
+import { i } from "node_modules/framer-motion/dist/types.d-a9pt5qxk";
+
+
 import Mentorship from "./pages/Mentorship";
+
 
 const queryClient = new QueryClient();
 
@@ -32,7 +40,11 @@ const App = () => (
             <Route path="/mentorship" element={<Mentorship />} />
             <Route path="/mock-test" element={<MockTest />} />
 
+            <Route path="/aptitude-test" element={<AptitudePage />} />
+
+
             <Route path="/aptitude" element={<ComingSoon />} />
+
             <Route path="/interview" element={<ComingSoon />} />
             <Route path="/system-design" element={<ComingSoon />} />
             <Route path="/progress" element={<ComingSoon />} />
