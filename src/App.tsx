@@ -11,6 +11,7 @@ import DSA from "./pages/DSA";
 import MockTest from "./pages/MockTest";
 import AptitudePage from "./pages/AptitudePage";
 import ProblemDetail from "./pages/ProblemDetail";
+import MyProgress from "./pages/MyProgress";
 import Companies from "./pages/Companies";
 import StudyMaterial from "./pages/StudyMaterial"; 
 import SystemDesign from "./pages/SystemDesign";
@@ -40,11 +41,11 @@ const App = () => (
             <Route path="/dsa/problem/:id" element={<ProblemDetail />} />
             <Route path="/system-design" element={<SystemDesign />} />
             <Route path="/companies" element={<Companies />} />
+            <Route path="/my-progress" element={<MyProgress />} />
             <Route path="/mentorship" element={<Mentorship />} />
             <Route path="/mock-test" element={<MockTest />} />
             <Route path="/aptitude-test" element={<AptitudePage />} />
             <Route path="/interview" element={<ComingSoon />} />
-            <Route path="/progress" element={<ComingSoon />} />
             <Route path="/settings" element={<Settings />} />
 
             {/* ✅ Resume Builder now functional */}
